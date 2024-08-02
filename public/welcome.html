@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Datang</title>
+      <script>
+        // Fungsi untuk mengarahkan ke home.html setelah 5 detik
+        setTimeout(() => {
+          window.location.href = '/home';
+        }, 5000);
+      </script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #222;
+            color: #fff;
+        }
+        .message {
+            text-align: center;
+            animation: fadeIn 3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .message h1 {
+            font-size: 3rem;
+            margin: 0;
+            animation: bounceIn 2s ease-in-out;
+        }
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .message p {
+            font-size: 1.5rem;
+            margin: 10px 0 0;
+            animation: slideIn 2s ease-in-out;
+        }
+        @keyframes slideIn {
+            0% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="message">
+        <h1>Selamat Datang!</h1>
+        <p>Di situs web kami yang baru dan lebih baik.</p>
+        <p id="ip-address">Memuat alamat IP...</p>
+        <p id="battery-status">Memuat status baterai...</p>
+    </div>
+    <audio controls autoplay loop>
+        <source src="https://www.example.com/music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <script>
+        // Mendapatkan alamat IP pengunjung
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ip-address').textContent = `Alamat IP Anda: ${data.ip}`;
+            })
+            .catch(error => {
+                console.error('Error fetching IP address:', error);
+                document.getElementById('ip-address').textContent = 'Gagal memuat alamat IP.';
+            });
+
+        // Mendapatkan status baterai pengunjung
+        navigator.getBattery().then(function(battery) {
+            function updateBatteryStatus() {
+                document.getElementById('battery-status').textContent = `Status Baterai: ${Math.round(battery.level * 100)}%`;
+            }
+            battery.addEventListener('levelchange', updateBatteryStatus);
+            updateBatteryStatus();
+        }).catch(error => {
+            console.error('Error getting battery status:', error);
+            document.getElementById('battery-status').textContent = 'Gagal memuat status baterai.';
+        });
+    </script>
+</body>
+</html>

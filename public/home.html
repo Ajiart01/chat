@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Bot - Dikembangkan oleh Aji Art</title>
+         <audio loop="true"
+        <audio autoplay="true" src="https://pomf2.lain.la/f/k7xq9bod.mp3">
+
+ </audio>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #ffffff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .chat-box {
+            height: 500px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .user {
+            justify-content: flex-end;
+        }
+
+        .bot {
+            justify-content: flex-start;
+        }
+
+        .message-text {
+            max-width: 60%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .user .message-text {
+            background-color: #007bff;
+            color: white;
+            border-bottom-right-radius: 0;
+        }
+
+        .bot .message-text {
+            background-color: #e2e3e5;
+            color: #333;
+            border-bottom-left-radius: 0;
+        }
+
+        .input-group {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e2e3e5;
+        }
+
+        .input-group-append button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .input-group-append button:hover {
+            background-color: #0056b3;
+        }
+
+        .message-text::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+        }
+
+        .user .message-text::after {
+            right: -10px;
+            border-left-color: #007bff;
+            border-right: 0;
+            border-bottom: 0;
+            margin-top: -10px;
+        }
+
+        .bot .message-text::after {
+            left: -10px;
+            border-right-color: #e2e3e5;
+            border-left: 0;
+            border-bottom: 0;
+            margin-top: -10px;
+        }
+
+        .typing {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .typing .message-text {
+            background-color: #e2e3e5;
+            color: #333;
+            border-bottom-left-radius: 0;
+            font-style: italic;
+        }
+
+        .description {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e2e3e5;
+        }
+
+        .description p {
+            margin: 0;
+            font-size: 1.1em;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container chat-container">
+        <div class="chat-header">
+            <h3>Chat Bot</h3>
+            <p>Dikembangkan oleh Aji Art</p>
+        </div>
+        <div class="description">
+            <p>Web ini dibuat untuk membantu orang dalam mencari informasi dan menjawab pertanyaan mereka.</p>
+        </div>
+        <div class="chat-box" id="chat-box">
+            <!-- Pesan akan ditampilkan di sini -->
+        </div>
+        <div class="input-group mt-3">
+            <input type="text" id="user-input" class="form-control" placeholder="Ketik pesan Anda di sini...">
+            <div class="input-group-append">
+                <button class="btn" type="button" id="send-btn"><i class="fas fa-paper-plane"></i> Kirim</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('send-btn').addEventListener('click', function () {
+            var userInput = document.getElementById('user-input').value;
+            if (userInput.trim() !== "") {
+                addMessage(userInput, 'user');
+                document.getElementById('user-input').value = '';
+
+                // Show typing animation
+                showTyping();
+
+                // Handle specific questions locally
+                if (userInput.toLowerCase().includes('siapa pembuatmu') || userInput.toLowerCase().includes('aji art')) {
+                    setTimeout(function () {
+                        hideTyping();
+                        addMessage('Saya dikembangkan oleh Aji Art.', 'bot');
+                    }, 1000); // Simulate typing delay
+                } else {
+                    // Fetch response from API
+                    fetch(`https://bgsbot.my.id/api/v1/gpt4?ask=${encodeURIComponent(userInput)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            setTimeout(function () {
+                                hideTyping();
+                                if (data.response) {
+                                    let botResponse = data.response;
+
+                                    // Replace specific terms with "Aji Art"
+                                    botResponse = replaceTerms(botResponse, ['OpenAI', 'AI', 'Open'], 'Aji Art');
+
+                                    addMessage(botResponse, 'bot');
+                                } else {
+                                    addMessage("Maaf, terjadi kesalahan. Coba lagi nanti.", 'bot');
+                                }
+                            }, 1000); // Simulate typing delay
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            hideTyping();
+                            addMessage("Maaf, terjadi kesalahan. Coba lagi nanti.", 'bot');
+                        });
+                }
+            }
+        });
+
+        function addMessage(text, sender) {
+            var messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+
+            var messageText = document.createElement('div');
+            messageText.classList.add('message-text');
+            messageText.innerText = text;
+
+            messageDiv.appendChild(messageText);
+            document.getElementById('chat-box').appendChild(messageDiv);
+            document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
+        }
+
+        function showTyping() {
+            var typingDiv = document.createElement('div');
+            typingDiv.classList.add('typing', 'bot');
+
+            var typingText = document.createElement('div');
+            typingText.classList.add('message-text');
+            typingText.innerText = 'Bot sedang mengetik...';
+
+            typingDiv.appendChild(typingText);
+            typingDiv.setAttribute('id', 'typing-indicator');
+            document.getElementById('chat-box').appendChild(typingDiv);
+            document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
+        }
+
+        function hideTyping() {
+            var typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        function replaceTerms(text, terms, replacement) {
+            terms.forEach(term => {
+                let regex = new RegExp('\\b' + term + '\\b', 'gi');
+                text = text.replace(regex, replacement);
+            });
+            return text;
+        }
+    </script>
+</body>
+</html>
