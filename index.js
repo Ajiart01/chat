@@ -5,24 +5,23 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'welcome.html'));
-});
+// Menghapus route handler untuk '/'
 
 app.get('/home', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'home.html'));
 });
 
-// Menambahkan middleware untuk melakukan redirect
+// Middleware untuk menangani redirect
 app.use((req, res, next) => {
   if (req.path === '/' && req.method === 'GET') {
-    // Jika request adalah GET ke '/', kirim file welcome.html
-    res.sendFile(path.join(__dirname, 'public', 'welcome.html'));
-    
-    // Setelah 5 detik, redirect ke '/home'
-    setTimeout(() => {
-      res.redirect('/home');
-    }, 5000);
+    res.sendFile(path.join(__dirname, 'public', 'welcome.html'), (err) => {
+      if (err) {
+        next(err);
+      } else {
+        // Setelah file terkirim, set header untuk redirect
+        res.set('Refresh', '5; url=/home');
+      }
+    });
   } else {
     next();
   }
