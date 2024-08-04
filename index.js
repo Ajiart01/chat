@@ -1,29 +1,22 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = 3000;
 
+// Middleware untuk menyajikan file statis dari folder public
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Rute untuk welcome.html
 app.get('/', (req, res) => {
-  res.send(`
-    <html>
-      <head>
-        <meta http-equiv="refresh" content="5;url=/home">
-        <title>Welcome</title>
-      </head>
-      <body>
-        <h1>Welcome!</h1>
-        <p>You will be redirected to home page in 5 seconds...</p>
-      </body>
-    </html>
-  `);
+  res.sendFile(path.join(__dirname, 'public', 'welcome.html'));
 });
 
+// Rute untuk home.html
 app.get('/home', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'home.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+// Mulai server
+app.listen(port, () => {
+  console.log(`Server berjalan di http://localhost:${port}`);
 });

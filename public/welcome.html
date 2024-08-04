@@ -1,113 +1,212 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selamat Datang</title>
+    <title>AjiArt ChatBot - Asisten AI Cerdas untuk Anda</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f39c12;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #222;
-            color: #fff;
-            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
         }
-        .message {
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
             text-align: center;
-            animation: fadeIn 3s ease-in-out;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
         }
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: var(--background-color);
+            transform: skewY(-3deg);
         }
-        .message h1 {
+        h1 {
             font-size: 3rem;
-            margin: 0;
-            animation: bounceIn 2s ease-in-out;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
-        @keyframes bounceIn {
-            0% {
-                transform: scale(0.3);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            70% {
-                transform: scale(0.9);
-            }
-            100% {
-                transform: scale(1);
-            }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
         }
-        .message p {
-            font-size: 1.5rem;
-            margin: 10px 0 0;
-            animation: slideIn 2s ease-in-out;
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin: 4rem 0;
         }
-        @keyframes slideIn {
-            0% {
-                transform: translateY(100%);
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        .feature {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            padding: 2rem;
+            margin: 1rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
         }
-        .home-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1rem;
+        .feature:hover {
+            transform: translateY(-10px);
+        }
+        .feature i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .cta {
+            text-align: center;
+            margin: 4rem 0;
+            padding: 3rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
             color: #fff;
-            background-color: #007bff;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-            animation: fadeIn 3s ease-in-out;
         }
-        .home-button:hover {
-            background-color: #0056b3;
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
         }
-        audio {
+        .about {
+            background-color: #fff;
+            padding: 3rem 0;
+            margin: 4rem 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .about h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        footer {
+            background-color: var(--primary-color);
+            color: #fff;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        #chatWindow {
             display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        #chatHeader {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #closeChat {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        #chatBody {
+            height: 310px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        #chatInput {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #eee;
         }
     </style>
 </head>
 <body>
-    <div class="message">
-        <h1>Selamat Datang!</h1>
-        <p>Di situs web kami yang baru dan lebih baik.</p>
-        <p id="ip-address">Memuat alamat IP...</p>
-        <p id="battery-status">Memuat status baterai...</p>
-        <button class="home-button" onclick="window.location.href='/home'">/home</button>
-    </div>
-    <script>
-        // Mendapatkan alamat IP pengunjung
-        fetch('https://api.ipify.org?format=json')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('ip-address').textContent = `Alamat IP Anda: ${data.ip}`;
-            })
-            .catch(error => {
-                console.error('Error fetching IP address:', error);
-                document.getElementById('ip-address').textContent = 'Gagal memuat alamat IP.';
-            });
+    <header>
+        <div class="container">
+            <h1>AjiArt ChatBot</h1>
+            <p>Asisten AI Cerdas untuk Segala Kebutuhan Anda</p>
+        </div>
+    </header>
 
-        // Mendapatkan status baterai pengunjung
-        navigator.getBattery().then(function(battery) {
-            function updateBatteryStatus() {
-                document.getElementById('battery-status').textContent = `Status Baterai: ${Math.round(battery.level * 100)}%`;
-            }
-            battery.addEventListener('levelchange', updateBatteryStatus);
-            updateBatteryStatus();
-        }).catch(error => {
-            console.error('Error getting battery status:', error);
-            document.getElementById('battery-status').textContent = 'Gagal memuat status baterai.';
-        });
-    </script>
+    <main class="container">
+        <section class="features">
+            <div class="feature">
+                <i class="fas fa-bolt"></i>
+                <h2>Cepat &amp; Efisien</h2>
+                <p>Dapatkan jawaban instan untuk pertanyaan Anda</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-clock"></i>
+                <h2>Tersedia 24/7</h2>
+                <p>Selalu siap membantu Anda kapan saja</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-brain"></i>
+                <h2>Pembelajaran Adaptif</h2>
+                <p>Semakin pintar seiring waktu penggunaan</p>
+            </div>
+        </section>
+
+        <section class="about">
+            <div class="container">
+                <h2>Tentang AjiArt</h2>
+                <p>AjiArt adalah perusahaan inovatif yang mengembangkan solusi AI canggih. Kami berkomitmen untuk menciptakan teknologi yang memudahkan kehidupan sehari-hari dan meningkatkan produktivitas. ChatBot kami adalah salah satu produk unggulan yang menggabungkan kecerdasan buatan dengan pemahaman bahasa alami untuk memberikan pengalaman interaksi yang luar biasa.</p>
+            </div>
+        </section>
+
+         <section class="cta">
+            <h2>Siap untuk Merasakan Kecerdasan AI?</h2>
+            <p>Mulai percakapan dengan AjiArt ChatBot dan rasakan sendiri kehebatannya!</p>
+            <a href="/home" class="btn">Mulai Chat Sekarang</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 AjiArt. Semua Hak Dilindungi Undang-Undang.</p>
+        </div>
+    </footer>
 </body>
 </html>
