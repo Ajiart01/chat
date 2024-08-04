@@ -4,12 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selamat Datang</title>
-      <script>
-        // Fungsi untuk mengarahkan ke home.html setelah 5 detik
-        setTimeout(() => {
-          window.location.href = '/home';
-        }, 5000);
-      </script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -20,6 +14,7 @@
             margin: 0;
             background-color: #222;
             color: #fff;
+            flex-direction: column;
         }
         .message {
             text-align: center;
@@ -63,6 +58,20 @@
                 opacity: 1;
             }
         }
+        .home-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            animation: fadeIn 3s ease-in-out;
+        }
+        .home-button:hover {
+            background-color: #0056b3;
+        }
         audio {
             display: none;
         }
@@ -74,11 +83,9 @@
         <p>Di situs web kami yang baru dan lebih baik.</p>
         <p id="ip-address">Memuat alamat IP...</p>
         <p id="battery-status">Memuat status baterai...</p>
+        <button class="home-button" onclick="window.location.href='/home'">/home</button>
     </div>
-    <audio controls autoplay loop>
-        <source src="https://www.example.com/music.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+
     <script>
         // Mendapatkan alamat IP pengunjung
         fetch('https://api.ipify.org?format=json')
